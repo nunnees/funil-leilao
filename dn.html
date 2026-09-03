@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spin to Unlock Your Discount — Property Map Circle</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --cream:#F5F0E8;
+  --black:#111111;
+  --orange:#E8440A;
+  --orange-2:#C43A08;
+  --orange-light:#F3924E;
+  --green:#009D43;
+  --gray:#888;
+}
+body{
+  background:#3a3a3a;
+  color:var(--black);
+  font-family:'Inter',sans-serif;
+  line-height:1.5;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px 16px;
+}
+a{color:inherit;text-decoration:none;}
+
+.panel{
+  width:100%;
+  max-width:460px;
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 30px 60px rgba(0,0,0,0.35);
+}
+
+@media(min-width:900px){
+  .panel{max-width:520px;}
+  .panel-header{padding:36px 40px 32px;}
+  .panel-header h1{font-size:34px;}
+  .panel-body{padding:44px 40px 38px;}
+  .wheel-wrap,.wheel-outer{width:320px;height:320px;}
+  .context-text{max-width:400px;font-size:15.5px;}
+}
+
+.panel-header{
+  background:linear-gradient(135deg,var(--orange-light),var(--orange));
+  padding:28px 30px 26px;
+  text-align:center;
+}
+.panel-header .kicker{
+  font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,0.85);margin-bottom:8px;
+}
+.panel-header h1{
+  font-family:'Fraunces',serif;font-size:clamp(24px,5vw,30px);font-weight:700;
+  color:#fff;line-height:1.15;
+}
+
+.panel-body{padding:36px 30px 30px;text-align:center;}
+
+.context-text{
+  font-size:14.5px;color:#555;line-height:1.55;max-width:360px;margin:0 auto 26px;
+}
+
+/* WHEEL */
+.wheel-wrap{position:relative;width:280px;height:280px;margin:0 auto 30px;}
+.pointer{
+  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;
+  border-top:22px solid var(--black);z-index:5;
+}
+.wheel-outer{
+  width:280px;height:280px;border-radius:50%;background:#fff;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18), inset 0 0 0 6px #fff;
+  position:relative;overflow:hidden;
+}
+.wheel{
+  width:100%;height:100%;border-radius:50%;position:relative;
+  transition:transform 4.5s cubic-bezier(.12,.68,.15,1);
+}
+.wheel svg{width:100%;height:100%;display:block;position:absolute;top:0;left:0;}
+
+.hub{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:56px;height:56px;background:#fff;border-radius:50%;
+  box-shadow:0 2px 10px rgba(0,0,0,0.18), inset 0 0 0 4px var(--orange);
+  display:flex;align-items:center;justify-content:center;font-size:24px;z-index:4;
+}
+
+.message{
+  font-size:18px;font-weight:700;margin-bottom:6px;min-height:26px;transition:opacity .25s;
+}
+.message.neutral{color:var(--black);}
+.message.retry{color:var(--orange-2);}
+.message.win{color:var(--green);}
+
+.price-row{
+  display:flex;align-items:baseline;justify-content:center;gap:14px;
+  margin:6px 0 26px;min-height:56px;
+}
+.price-old{font-size:22px;color:#aaa;text-decoration:line-through;text-decoration-thickness:2px;font-weight:600;}
+.price-new{font-family:'Fraunces',serif;font-size:44px;font-weight:700;color:var(--green);}
+
+.btn{
+  display:block;width:100%;padding:18px 24px;border-radius:10px;border:none;cursor:pointer;
+  font-weight:900;font-size:15px;letter-spacing:.04em;text-transform:uppercase;
+  transition:transform .15s, background .15s, opacity .15s;
+}
+.btn-spin{background:var(--green);color:#fff;}
+.btn-spin:hover{background:#007A34;transform:translateY(-2px);}
+.btn-spin:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-spin.hide{display:none;}
+
+.btn-continue{
+  background:var(--orange);color:#fff;display:none;align-items:center;justify-content:center;gap:8px;
+}
+.btn-continue:hover{background:var(--orange-2);transform:translateY(-2px);}
+.btn-continue.show{display:flex;}
+
+.decline{text-align:center;margin-top:18px;font-size:13px;color:#999;text-decoration:underline;display:block;}
+
+@media(max-width:420px){
+  .wheel-wrap,.wheel-outer{width:230px;height:230px;}
+  .panel-body{padding:28px 20px 24px;}
+  .price-new{font-size:36px;}
+}
+</style>
+</head>
+<body>
+
+<div class="panel">
+
+  <div class="panel-header">
+    <div class="kicker">One-Time Offer</div>
+    <h1>Spin to Unlock Your Discount</h1>
+  </div>
+
+  <div class="panel-body">
+
+    <p class="context-text">Wait, before you go. <strong>You still have 2 shots at joining the Property Map Circle for less.</strong> Spin the wheel below and unlock a real discount.</p>
+
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <div class="wheel-outer">
+        <div class="wheel" id="wheel">
+          <svg viewBox="0 0 200 200" id="wheelSvg"></svg>
+        </div>
+      </div>
+      <div class="hub">🎁</div>
+    </div>
+
+    <div class="message neutral" id="message">Spin to reveal your discount!</div>
+    <div class="price-row" id="priceRow" style="visibility:hidden;">
+      <span class="price-old">$97</span>
+      <span class="price-new" id="priceNew">$97</span>
+    </div>
+
+    <button class="btn btn-spin" id="spinBtn">Spin the Wheel</button>
+    <a href="#" class="btn btn-continue" id="continueBtn">Continue →</a>
+
+    <a href="#" class="decline">No thanks, continue to my account</a>
+
+  </div>
+</div>
+
+<script>
+/*
+  ============================================================
+  SINGLE SOURCE OF TRUTH FOR ALL ANGLES
+  ============================================================
+  - The wheel has N equal slices.
+  - Slice index 0 is drawn so its CENTER sits at 0deg (straight up),
+    slice 1's center at 1*SLICE_DEG, slice 2's at 2*SLICE_DEG, etc.,
+    going CLOCKWISE, all measured from the top (12 o'clock = 0deg).
+  - The pointer is a fixed physical triangle at the top of the wheel (0deg), never moves.
+  - To make slice K land under the pointer, we rotate the wheel element by:
+        rotation = (360 - K*SLICE_DEG) mod 360   [+ N*360 for spin effect]
+    This is because rotating the wheel clockwise by R moves the slice that
+    WAS at angle K*SLICE_DEG to angle (K*SLICE_DEG + R). Setting this to 0 (mod 360)
+    and solving for R gives exactly the formula above.
+  - There is NO separate "offset" constant anywhere else in this file. Both the
+    drawing function and the spin function import SLICE_DEG from the same place,
+    so they can never drift out of sync.
+*/
+
+const SLICES = [
+  {label:'30% OFF',   win:true,  discount:30, fill:'#F5C542', text:'#111'},
+  {label:'TRY AGAIN',  win:false, fill:'#8A2E0A', text:'#fff'},
+  {label:'5% OFF',    win:false, fill:'#F3924E', text:'#111'},
+  {label:'TRY AGAIN',  win:false, fill:'#8A2E0A', text:'#fff'},
+  {label:'10% OFF',   win:false, fill:'#F3924E', text:'#111'},
+  {label:'TRY AGAIN',  win:false, fill:'#8A2E0A', text:'#fff'}
+];
+const SLICE_DEG = 360 / SLICES.length; // 60deg per slice
+
+const CX = 100, CY = 100, R = 100;
+
+// Converts a "clock angle" (0 = straight up, clockwise positive) + radius into SVG x,y.
+function pointAt(clockAngleDeg, radius){
+  const rad = (clockAngleDeg - 90) * Math.PI / 180;
+  return { x: CX + radius * Math.cos(rad), y: CY + radius * Math.sin(rad) };
+}
+
+function drawWheel(){
+  const svg = document.getElementById('wheelSvg');
+  svg.innerHTML = '';
+  const NS = 'http://www.w3.org/2000/svg';
+
+  SLICES.forEach((slice, i) => {
+    // This slice's arc spans from (i*SLICE_DEG - SLICE_DEG/2) to (i*SLICE_DEG + SLICE_DEG/2),
+    // so that its CENTER is exactly at i*SLICE_DEG, matching the spin math above.
+    const halfSlice = SLICE_DEG / 2;
+    const arcStart = i * SLICE_DEG - halfSlice;
+    const arcEnd   = i * SLICE_DEG + halfSlice;
+
+    const p1 = pointAt(arcStart, R);
+    const p2 = pointAt(arcEnd, R);
+
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', `M${CX},${CY} L${p1.x.toFixed(4)},${p1.y.toFixed(4)} A${R},${R} 0 0,1 ${p2.x.toFixed(4)},${p2.y.toFixed(4)} Z`);
+    path.setAttribute('fill', slice.fill);
+    svg.appendChild(path);
+
+    // Label sits at the slice's center angle (i*SLICE_DEG), at a radius comfortably inside the wheel.
+    const labelPoint = pointAt(i * SLICE_DEG, 62);
+    const text = document.createElementNS(NS, 'text');
+    text.setAttribute('x', labelPoint.x.toFixed(4));
+    text.setAttribute('y', labelPoint.y.toFixed(4));
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('font-family', 'Inter, sans-serif');
+    text.setAttribute('font-weight', '800');
+    text.setAttribute('font-size', slice.label.length > 6 ? '8' : '10');
+    text.setAttribute('fill', slice.text);
+
+    let textRotation = i * SLICE_DEG;
+    if (textRotation > 90 && textRotation < 270) textRotation += 180; // keep text upright
+    text.setAttribute('transform', `rotate(${textRotation.toFixed(2)} ${labelPoint.x.toFixed(4)} ${labelPoint.y.toFixed(4)})`);
+    text.textContent = slice.label;
+    svg.appendChild(text);
+
+    // Thin white divider lines between slices, drawn exactly at each slice boundary,
+    // to make the geometry visually verifiable (boundaries always match the fill boundaries).
+    const divider = document.createElementNS(NS, 'line');
+    const dPoint = pointAt(arcStart, R);
+    divider.setAttribute('x1', CX);
+    divider.setAttribute('y1', CY);
+    divider.setAttribute('x2', dPoint.x.toFixed(4));
+    divider.setAttribute('y2', dPoint.y.toFixed(4));
+    divider.setAttribute('stroke', '#fff');
+    divider.setAttribute('stroke-width', '1');
+    svg.appendChild(divider);
+  });
+}
+
+drawWheel();
+
+// --- Game state ---
+const wheelEl = document.getElementById('wheel');
+const spinBtn = document.getElementById('spinBtn');
+const continueBtn = document.getElementById('continueBtn');
+const message = document.getElementById('message');
+const priceRow = document.getElementById('priceRow');
+const priceNew = document.getElementById('priceNew');
+
+let spinsUsed = 0;
+let hasWon = false;
+let currentVisualRotation = 0; // tracks the actual rotation degrees applied to the wheel so far
+
+// First spin ALWAYS lands on one of the "TRY AGAIN" slices (indexes 1, 3, 5), picked at random.
+// Second spin ALWAYS lands on "30% OFF" (index 0).
+const TRY_AGAIN_INDEXES = [1, 3, 5];
+const PLAN = [
+  TRY_AGAIN_INDEXES[Math.floor(Math.random() * TRY_AGAIN_INDEXES.length)],
+  0
+];
+
+function spin(){
+  if (hasWon || spinsUsed >= PLAN.length) return;
+  spinBtn.disabled = true;
+
+  const targetIndex = PLAN[spinsUsed];
+  spinsUsed++;
+
+  // Find the smallest rotation (mod 360) that lands targetIndex under the pointer,
+  // then add enough full 360deg turns on top of the wheel's CURRENT accumulated rotation
+  // so the new absolute rotation is always at least 5 full turns MORE than where it is now.
+  // This guarantees the browser always animates a long forward spin, never a short "hop".
+  const baseForTarget = ((360 - (targetIndex * SLICE_DEG)) % 360 + 360) % 360;
+  const currentMod = ((currentVisualRotation % 360) + 360) % 360;
+  let deltaToTarget = baseForTarget - currentMod;
+  if (deltaToTarget <= 0) deltaToTarget += 360; // always move forward, never backward or zero
+
+  const extraFullSpins = 5; // always at least 5 extra full rotations for a satisfying spin
+  const newRotation = currentVisualRotation + deltaToTarget + extraFullSpins * 360;
+
+  currentVisualRotation = newRotation;
+  wheelEl.style.transform = `rotate(${newRotation}deg)`;
+
+  message.textContent = 'Spinning...';
+  message.className = 'message neutral';
+
+  setTimeout(() => {
+    const result = SLICES[targetIndex];
+
+    if (result.win){
+      hasWon = true;
+      message.textContent = '🎉 You unlocked 30% OFF!';
+      message.className = 'message win';
+      const discounted = Math.round(97 * (1 - result.discount/100));
+      priceRow.style.visibility = 'visible';
+      priceNew.textContent = '$' + discounted;
+      spinBtn.classList.add('hide');
+      continueBtn.classList.add('show');
+    } else {
+      const remaining = PLAN.length - spinsUsed;
+      message.textContent = remaining > 0
+        ? `So close! You have ${remaining} spin left — try again 👇`
+        : 'Try again 👇';
+      message.className = 'message retry';
+      spinBtn.textContent = 'Spin Again';
+      spinBtn.disabled = false;
+    }
+  }, 4600);
+}
+
+spinBtn.addEventListener('click', spin);
+</script>
+
+</body>
+</html>
